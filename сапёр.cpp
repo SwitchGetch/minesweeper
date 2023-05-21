@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <time.h>
 #include <vector>
@@ -198,6 +198,19 @@ int main()
 
             if (field[pos.first][pos.second] == '*')
             {
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (field[i][j] == '*')
+                        {
+                            mask[i][j] = ' ';
+                        }
+                    }
+                }
+
+                FieldOutput(field, mask);
+
                 Sleep(1000);
 
                 system("cls");
