@@ -241,6 +241,8 @@ int main()
 
     FieldCreation(field, mask);
 
+    BombsNumber(field);
+
     FieldOutput(field, mask);
 
     while (alive)
@@ -277,48 +279,51 @@ int main()
             bombs = -1;
         }
 
-        if (action == 1 && mask[pos.first][pos.second] != char(30) && pos.first > 0 && pos.second > 0 && pos.first < 10 && pos.second < 10)
+        if (action > 0 && action < 4 && pos.first > 0 && pos.second > 0 && pos.first < 10 && pos.second < 10)
         {
-            mask[pos.first][pos.second] = ' ';
-
-            if (field[pos.first][pos.second] == '0')
+            if (action == 1 && mask[pos.first][pos.second] != char(30))
             {
-                OpenZeroPositions(field, mask, pos.first, pos.second);
+                mask[pos.first][pos.second] = ' ';
+
+                if (field[pos.first][pos.second] == '0')
+                {
+                    OpenZeroPositions(field, mask, pos.first, pos.second);
+                }
+
+                FieldOutput(field, mask);
+
+                if (field[pos.first][pos.second] == '*' || Check(field, mask))
+                {
+                    alive = false;
+                }
             }
-
-            FieldOutput(field, mask);
-
-            if (field[pos.first][pos.second] == '*' || Check(field, mask))
+            else if (action == 2)
             {
-                alive = false;
+                if (mask[pos.first][pos.second] == '#')
+                {
+                    mask[pos.first][pos.second] = char(30);
+                }
+
+                FieldOutput(field, mask);
+
+                if (Check(field, mask))
+                {
+                    alive = false;
+                }
             }
-        }
-        else if (action == 2 && pos.first > 0 && pos.second > 0 && pos.first < 10 && pos.second < 10)
-        {
-            if (mask[pos.first][pos.second] == '#')
+            else if (action == 3)
             {
-                mask[pos.first][pos.second] = char(30);
-            }
+                if (mask[pos.first][pos.second] == char(30))
+                {
+                    mask[pos.first][pos.second] = '#';
+                }
 
-            FieldOutput(field, mask);
+                FieldOutput(field, mask);
 
-            if (Check(field, mask))
-            {
-                alive = false;
-            }
-        }
-        else if (action == 3 && pos.first > 0 && pos.second > 0 && pos.first < 10 && pos.second < 10)
-        {
-            if (mask[pos.first][pos.second] == char(30))
-            {
-                mask[pos.first][pos.second] = '#';
-            }
-
-            FieldOutput(field, mask);
-
-            if (Check(field, mask))
-            {
-                alive = false;
+                if (Check(field, mask))
+                {
+                    alive = false;
+                }
             }
         }
         else
