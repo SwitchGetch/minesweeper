@@ -325,6 +325,12 @@ int main()
                     alive = false;
                 }
             }
+            else
+            {
+                system("cls");
+
+                FieldOutput(field, mask);
+            }
         }
         else
         {
