@@ -237,7 +237,7 @@ int main()
     vector<vector<char>> field;
     vector<vector<char>> mask;
     bool alive = true;
-    int bombs = 9;
+    int x = 0, y = 0, bombs = 9, action;
 
     FieldCreation(field, mask);
 
@@ -245,11 +245,52 @@ int main()
 
     FieldOutput(field, mask);
 
+    while (true)
+    {
+        cout << "open position: ";
+        cin >> x;
+        cin >> y;
+
+        if (x > 0 && y > 0 && x < 10 && y < 10)
+        {
+            mask[x][y] = ' ';
+
+            while (bombs > 0)
+            {
+                int tempX = 1 + rand() % 9, tempY = 1 + rand() % 9;
+
+                if (field[tempX][tempY] == '0' && mask[tempX][tempY] != ' ')
+                {
+                    field[tempX][tempY] = '*';
+
+                    bombs--;
+                }
+            }
+
+
+            BombsNumber(field);
+
+            if (field[x][y] == '0')
+            {
+                OpenZeroPositions(field, mask, x, y);
+            }
+
+            system("cls");
+
+            FieldOutput(field, mask);
+
+            break;
+        }
+        else
+        {
+            system("cls");
+
+            FieldOutput(field, mask);
+        }
+    }
+
     while (alive)
     {
-        pair<int, int> pos;
-        int action;
-
         cout << "actions: " << endl;
         cout << "1) open position" << endl;
         cout << "2) put flag" << endl;
@@ -257,51 +298,32 @@ int main()
         cout << endl;
 
         cin >> action;
-        cin >> pos.first;
-        cin >> pos.second;
+        cin >> x;
+        cin >> y;
 
-        while (bombs > 0)
+        if (action > 0 && action < 4 && x > 0 && y > 0 && x < 10 && y < 10)
         {
-            int tempX = 1 + rand() % 9, tempY = 1 + rand() % 9;
-
-            if (field[tempX][tempY] == '0' && tempX != pos.first && tempY != pos.second)
+            if (action == 1 && mask[x][y] != char(30))
             {
-                field[tempX][tempY] = '*';
+                mask[x][y] = ' ';
 
-                bombs--;
-            }
-        }
-
-        if (bombs == 0)
-        {
-            BombsNumber(field);
-
-            bombs = -1;
-        }
-
-        if (action > 0 && action < 4 && pos.first > 0 && pos.second > 0 && pos.first < 10 && pos.second < 10)
-        {
-            if (action == 1 && mask[pos.first][pos.second] != char(30))
-            {
-                mask[pos.first][pos.second] = ' ';
-
-                if (field[pos.first][pos.second] == '0')
+                if (field[x][y] == '0')
                 {
-                    OpenZeroPositions(field, mask, pos.first, pos.second);
+                    OpenZeroPositions(field, mask, x, y);
                 }
 
                 FieldOutput(field, mask);
 
-                if (field[pos.first][pos.second] == '*' || Check(field, mask))
+                if (field[x][y] == '*' || Check(field, mask))
                 {
                     alive = false;
                 }
             }
             else if (action == 2)
             {
-                if (mask[pos.first][pos.second] == '#')
+                if (mask[x][y] == '#')
                 {
-                    mask[pos.first][pos.second] = char(30);
+                    mask[x][y] = char(30);
                 }
 
                 FieldOutput(field, mask);
@@ -313,9 +335,9 @@ int main()
             }
             else if (action == 3)
             {
-                if (mask[pos.first][pos.second] == char(30))
+                if (mask[x][y] == char(30))
                 {
-                    mask[pos.first][pos.second] = '#';
+                    mask[x][y] = '#';
                 }
 
                 FieldOutput(field, mask);
